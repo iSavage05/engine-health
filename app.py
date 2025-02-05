@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 # Function to download the file from Google Drive
 def download_file_from_google_drive(file_id, destination):
     # Construct the direct download URL
-    url = f"https://drive.google.com/uc?id={file_id}"
+    url = f"https://drive.google.com/uc?id={file_id}&export=download"
     
     session = requests.Session()
     response = session.get(url, stream=True)
