@@ -7,11 +7,14 @@ import os
 from sklearn.ensemble import RandomForestClassifier
 
 # Function to download the file from Google Drive
-def download_file_from_google_drive(url, destination):
+def download_file_from_google_drive(file_id, destination):
+    # Construct the direct download URL
+    url = f"https://drive.google.com/uc?id={file_id}"
+    
     session = requests.Session()
     response = session.get(url, stream=True)
     
-    # Check if the request is successful
+    # Check if the request is successful (status code 200)
     if response.status_code == 200:
         with open(destination, 'wb') as f:
             for chunk in response.iter_content(1024):
@@ -20,22 +23,25 @@ def download_file_from_google_drive(url, destination):
     else:
         return False
 
-# URL to the Google Drive file
-file_url = "https://drive.google.com/uc?id=1WOL9TQLPZ-RRon8vc1sDtY7IKuYH0ydt"
-
+# File ID from Google Drive URL
+file_id = "1WOL9TQLPZ-RRon8vc1sDtY7IKuYH0ydt"  # Extracted from the original URL
+model_file = "rf_model_cpu.pkl"
 
 # Check if the file already exists, if not, download it
 if not os.path.exists(model_file):
-    success = download_file_from_google_drive(file_url, model_file)
-    model_file = success
+    success = download_file_from_google_drive(file_id, model_file)
     if success:
         st.success("Model file downloaded successfully!")
     else:
         st.error("Failed to download model file.")
 
 # Load the trained model after downloading it
-with open(model_file, 'rb') as file:
-    model = pickle.load(file)
+try:
+    with open(model_file, 'rb') as file:
+        model = pickle.load(file)
+except Exception as e:
+    st.error(f"Failed to load model: {e}")
+    st.stop()
 
 # Real sensor names and corresponding model feature names
 sensor_names = {
