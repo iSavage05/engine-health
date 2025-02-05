@@ -22,11 +22,12 @@ def download_file_from_google_drive(url, destination):
 
 # URL to the Google Drive file
 file_url = "https://drive.google.com/uc?id=1WOL9TQLPZ-RRon8vc1sDtY7IKuYH0ydt"
-model_file = "rf_model_cpu.pkl"
+
 
 # Check if the file already exists, if not, download it
 if not os.path.exists(model_file):
     success = download_file_from_google_drive(file_url, model_file)
+    model_file = success
     if success:
         st.success("Model file downloaded successfully!")
     else:
